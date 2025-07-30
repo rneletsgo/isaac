@@ -30,7 +30,7 @@ from lab.flamingo.assets.flamingo import FLAMINGO_ASSETS_DATA_DIR
 
 HUMANOID_CFG = ArticulationCfg(
     spawn=sim_utils.UsdFileCfg(
-        usd_path=f"{FLAMINGO_ASSETS_DATA_DIR}/Robots/Flamingo/humanoid_rev_2_0_0/humanoid_rev_2_0_0.usd",
+        usd_path=f"{FLAMINGO_ASSETS_DATA_DIR}/Robots/Flamingo/humanoid_rev_2_1_0/humanoid_rev_2_1_0.usd",
         activate_contact_sensors=True,
         rigid_props=sim_utils.RigidBodyPropertiesCfg(
             disable_gravity=False,
