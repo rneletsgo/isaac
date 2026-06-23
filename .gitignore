@@ -13,3 +13,4 @@ mjcf/
 *.asset_hash
 configuration/
 IsaacLab/
+lab/flamingo/assets/data/Robots/Flamingo.zip
