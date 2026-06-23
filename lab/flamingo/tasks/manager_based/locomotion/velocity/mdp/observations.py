@@ -227,8 +227,14 @@ def generated_partial_commands(env: ManagerBasedRLEnv, command_name: str) -> tor
 def generated_scaled_commands(env: ManagerBasedRLEnv, command_name: str, scale: tuple) -> torch.Tensor:
     """The generated command from command term in the command manager with the given name."""
     scaled_command = env.command_manager.get_command(command_name).clone()
-    scaled_command[:, :3] *= torch.tensor(scale, device=env.device)
+    cmd_dim = scaled_command.shape[1]
+    apply_len = min(len(scale), cmd_dim)
+    scaled_command[:, :apply_len] *= torch.tensor(list(scale)[:apply_len], device=env.device)
+    if len(scale) > cmd_dim:
+        padding = torch.zeros(scaled_command.shape[0], len(scale) - cmd_dim, device=env.device)
+        scaled_command = torch.cat([scaled_command, padding], dim=-1)
     return scaled_command
+
 
 def generated_scaled_event_commands(env: ManagerBasedRLEnv, command_name: str, scale: tuple) -> torch.Tensor:
     """The generated command from command term in the command manager with the given name."""

@@ -27,28 +27,13 @@ class FlamingoRewardsCfg():
     track_ang_vel_z_exp = RewTerm(
         func=mdp.track_ang_vel_z_link_exp, weight=1.0, params={"command_name": "base_velocity", "std": math.sqrt(0.25)}
     )
-
     lin_vel_z_l2 = RewTerm(func=mdp.lin_vel_z_link_l2, weight=-2.0)
     ang_vel_xy_l2 = RewTerm(func=mdp.ang_vel_xy_link_l2, weight=-0.05)
-
-    # joint_target_deviation_range = RewTerm(
-    #     func=mdp.joint_target_deviation_range_l1_inv,
-    #     weight=1.0,
-    #     params={
-    #         "min_angle": -0.7,
-    #         "max_angle": -0.55,
-    #         "in_range_reward": 1.0,
-    #         "cmd_threshold": 0.0,
-    #         "asset_cfg": SceneEntityCfg("robot", joint_names=".*_shoulder_joint"),
-    #     },
-    # )
-
     dof_pos_limits_shoulder = RewTerm(
         func=mdp.joint_pos_limits,
         weight=-1.0,
         params={"asset_cfg": SceneEntityCfg("robot", joint_names=".*_shoulder_joint")},
     )
-
     undesired_contacts = RewTerm(
         func=mdp.undesired_contacts,
         weight=-0.5,
@@ -67,7 +52,6 @@ class FlamingoRewardsCfg():
         weight=-0.3,  # default: -0.5
         params={"asset_cfg": SceneEntityCfg("robot", joint_names=".*_shoulder_joint")},
     )
-
     flat_orientation = RewTerm(func=mdp.flat_euler_angle_l2, weight=-1.0)
     base_height = RewTerm(
         func=mdp.base_height_adaptive_l2,
@@ -77,7 +61,6 @@ class FlamingoRewardsCfg():
             "asset_cfg": SceneEntityCfg("robot", body_names="base_link"),
         },
     )
-
     dof_torques_joints_l2 = RewTerm(
         func=mdp.joint_torques_l2,
         weight=-5.0e-5,
@@ -88,7 +71,6 @@ class FlamingoRewardsCfg():
         weight=-5.0e-5,
         params={"asset_cfg": SceneEntityCfg("robot", joint_names=[".*_wheel_joint"])},
     )
-
     dof_acc_joints_l2 = RewTerm(
         func=mdp.joint_acc_l2,
         weight=-2.5e-7,
@@ -99,9 +81,7 @@ class FlamingoRewardsCfg():
         weight=-2.5e-7,
         params={"asset_cfg": SceneEntityCfg("robot", joint_names=[".*_wheel_joint"])},
     )
-
     action_rate_l2 = RewTerm(func=mdp.action_rate_l2, weight=-0.01)  # default: -0.01
-
     termination_penalty = RewTerm(func=mdp.is_terminated, weight=-200.0)
     time_conditioned_penalty = RewTerm(
         func=mdp.is_terminated_term,
@@ -129,31 +109,6 @@ class FlamingoFlatEnvCfg(LocomotionVelocityFlatEnvCfg):
         self.scene.right_wheel_height_scanner = None
         self.scene.left_mask_sensor = None
         self.scene.right_mask_sensor = None
-        
-        #! ****************** Observations setup - 0 *************** !#
-        # observations
-        self.observations.none_stack_policy.base_lin_vel = None
-        self.observations.none_stack_policy.base_pos_z = None
-        self.observations.none_stack_policy.current_reward = None
-        self.observations.none_stack_policy.is_contact = None
-        self.observations.none_stack_policy.lift_mask = None
-        self.observations.none_stack_policy.height_scan = None
-        
-        if hasattr(self.observations.none_stack_policy.base_pos_z, "params"):
-            self.observations.none_stack_policy.base_pos_z.params["sensor_cfg"] = None
-        if hasattr(self.observations.none_stack_critic.base_pos_z, "params"):
-            self.observations.none_stack_critic.base_pos_z.params["sensor_cfg"] = None
-
-        self.observations.none_stack_policy.roll_pitch_commands = None
-        self.observations.none_stack_policy.event_commands = None
-        self.observations.none_stack_critic.roll_pitch_commands = None
-        self.observations.none_stack_critic.event_commands = None
-        self.observations.none_stack_critic.height_scan = None
-        self.observations.none_stack_critic.base_height_scan = None
-        self.observations.none_stack_critic.left_wheel_height_scan = None
-        self.observations.none_stack_critic.right_wheel_height_scan = None
-        self.observations.none_stack_critic.lift_mask = None
-        #! ********************************************************* !#
 
         # reset_robot_joint_zero should be called here
         self.events.reset_robot_joints.params["position_range"] = (-0.1, 0.1)
@@ -228,10 +183,6 @@ class FlamingoFlatEnvCfg_PLAY(FlamingoFlatEnvCfg):
         self.events.push_robot.params = {
             "velocity_range": {"x": (-0.5, 0.5), "y": (-0.5, 0.5), "z": (-0.5, 0.5)},
         }
-        # self.events.robot_wheel_stiffness_and_damping.params["stiffness_distribution_params"] = (1.0, 1.0)
-        # self.events.robot_wheel_stiffness_and_damping.params["damping_distribution_params"] = (1.0, 1.0)
-        # self.events.robot_joint_stiffness_and_damping.params["stiffness_distribution_params"] = (1.0, 1.0)
-        # self.events.robot_joint_stiffness_and_damping.params["damping_distribution_params"] = (1.0, 1.0)
         # add base mass should be called here
         self.events.add_base_mass.params["asset_cfg"].body_names = ["base_link"]
         self.events.add_base_mass.params["mass_distribution_params"] = (-0.5, 1.0)

@@ -20,7 +20,7 @@ from . import (
 
 ###########################################Track Velocity##############################################
 gym.register(
-    id="Isaac-Velocity-Flat-Flamingo-Light-v1-ppo",
+    id="flamingo-light-flat-ppo",
     entry_point="isaaclab.envs:ManagerBasedRLEnv",
     disable_env_checker=True,
     kwargs={
@@ -30,7 +30,7 @@ gym.register(
 )
 
 gym.register(
-    id="Isaac-Velocity-Flat-Flamingo-Light-Play-v1-ppo",
+    id="flamingo-light-flat-ppo-Play",
     entry_point="isaaclab.envs:ManagerBasedRLEnv",
     disable_env_checker=True,
     kwargs={
